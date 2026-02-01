@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .question {
+            font-size: 2.5rem;
+            color: #ff1493;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+            min-height: 150px;
+        }
+
+        .btn {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #a8a8a8, #808080);
+            color: white;
+            box-shadow: 0 10px 30px rgba(128, 128, 128, 0.4);
+            position: relative;
+        }
+
+        .btn-no:hover {
+            transform: scale(1.05);
+        }
+
+        /* Yes Response */
+        .yes-response {
+            display: none;
+            text-align: center;
+        }
+
+        .yes-response h1 {
+            font-size: 3rem;
+            color: #ff1493;
+            margin-bottom: 20px;
+            animation: bounce 0.5s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .yes-response .celebration-image {
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8rem;
+            animation: pulse 1s ease-in-out infinite;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .yes-response p {
+            font-size: 1.5rem;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .hearts-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .celebration-heart {
+            position: absolute;
+            font-size: 3rem;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .question-container {
+            display: block;
+        }
+
+        @media (max-width: 480px) {
+            .question {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 15px 40px;
+                font-size: 1.2rem;
+            }
+            
+            .yes-response h1 {
+                font-size: 2rem;
+            }
+            
+            .yes-response .celebration-image {
+                width: 200px;
+                height: 200px;
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="backgroundHearts"></div>
+    <div class="hearts-celebration" id="celebrationHearts"></div>
+
+    <div class="container">
+        <div class="question-container" id="questionContainer">
+            <h1 class="question">❤️ Will You Be My Valentine? ❤️</h1>
+            <div class="buttons-container">
+                <button class="btn btn-yes" onclick="sayYes()">Yes</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="hideNo()" onclick="hideNo()">No</button>
+            </div>
+        </div>
+
+        <div class="yes-response" id="yesResponse">
+            <h1>❤️ Thank You! ❤️</h1>
+            <div class="celebration-image">💕</div>
+            <p>You're the best! 💖</p>
+            <p style="margin-top: 10px; font-size: 1rem; color: #888;">You've made me the happiest person! 🥰</p>
+        </div>
+    </div>
+
+    <script>
+        // Create background hearts
+        function createBackgroundHearts() {
+            const container = document.getElementById('backgroundHearts');
+            const hearts = ['❤️', '💕', '💗', '💖', '💓', '💘', '💝'];
+            
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 4 + 's';
+                heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+
+        // Hide No button on hover - it disappears!
+        function hideNo() {
+            const noBtn = document.getElementById('noBtn');
+            noBtn.style.opacity = '0';
+            noBtn.style.transform = 'scale(0)';
+            noBtn.style.transition = 'all 0.3s ease';
+            
+            // Show a message
+            setTimeout(() => {
+                noBtn.textContent = '😜';
+                noBtn.style.transform = 'scale(1)';
+                noBtn.style.opacity = '1';
+                
+                // Bring it back after a moment
+                setTimeout(() => {
+                    noBtn.style.opacity = '0';
+                    noBtn.style.transform = 'scale(0)';
+                }, 500);
+            }, 300);
+        }
+
+        // Say Yes
+        function sayYes() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('yesResponse').style.display = 'block';
+            createCelebration();
+        }
+
+        // Create celebration hearts
+        function createCelebration() {
+            const container = document.getElementById('celebrationHearts');
+            const hearts = ['❤️', '💕', '💗', '💖', '💓', '💘', '💝', '🌹', '🥰'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('span');
+                    heart.className = 'celebration-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    container.appendChild(heart);
+                    
+                    setTimeout(() => heart.remove(), 4000);
+                }, i * 100);
+            }
+        }
+
+        // Initialize
+        createBackgroundHearts();
+    </script>
+</body>
+</html>
+
